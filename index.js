@@ -1,36 +1,39 @@
-const { addonBuilder, serveHTTP } = require("stremio-addon-sdk");
+const { addonBuilder, serveHTTP } = require('stremio-addon-sdk');
 
 const manifest = {
-  id: "com.tal.stremio.hebrew",
-  version: "1.0.0",
-  name: "Hebrew Stream",
-  description: "Stremio addon",
-  resources: ["stream", "meta"],
-  types: ["movie", "series"],
-  catalogs: []
+  id: 'com.direct.embed.addon',
+  version: '1.0.0',
+  name: 'Direct Web Streamer',
+  description: 'Streams directly from web sources without torrents or seeders',
+  types: ['movie', 'series'],
+  catalogs: [],
+  resources: ['stream']
 };
 
 const builder = new addonBuilder(manifest);
 
-/*
-  TEST STREAMS
-
-  אלה רק כתובות בדיקה.
-  בהמשך נחליף אותן במקורות שהשרת שלך מורשה להשתמש בהם.
-*/
-
 builder.defineStreamHandler(async ({ type, id }) => {
-  return {
-    streams: [
-      {
-        name: "Test",
-        title: "Test Stream",
-        url: "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
-      }
-    ]
-  };
+  const parts = id.split(':');
+  const imdbId = parts[0];
+  let streams = [];
+
+  if (type === 'movie') {
+    streams.push({
+      name: 'Direct Web',
+      title: '1080p | Direct Stream (No Torrents)',
+      url: `https://vidsrc.xyz/embed/movie?imdb=${imdbId}`
+    });
+  } else if (type === 'series') {
+    const season = parts[1] || 1;
+    const episode = parts[2] || 1;
+    streams.push({
+      name: 'Direct Web',
+      title: `S${season}E${episode} | Direct Stream (No Torrents)`,
+      url: `https://vidsrc.xyz/embed/tv?imdb=${imdbId}&season=${season}&episode=${episode}`
+    });
+  }
+
+  return { streams };
 });
 
-serveHTTP(builder.getInterface(), {
-  port: process.env.PORT || 7000
-});
+serveHTTP(builder.getInterface(), { port: process.env.PORT || 7000 });
