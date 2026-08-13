@@ -1,12 +1,13 @@
 {
-  "name": "stremio-hebrew-addon",
-  "version": "1.0.0",
+  "name": "tal-ultimate-stremio",
+  "version": "2.0.0",
+  "description": "Ultimate Hebrew-friendly Stremio addon",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
   },
   "dependencies": {
-    "stremio-addon-sdk": "^1.6.10",
-    "axios": "^1.6.0"
+    "axios": "^1.11.0",
+    "stremio-addon-sdk": "^1.11.0"
   }
 }
